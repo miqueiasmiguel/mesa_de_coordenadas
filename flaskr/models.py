@@ -1,8 +1,14 @@
 from datetime import datetime
-from flaskr import db  # pylint: disable=no-member
+from flask_login import UserMixin
+from flaskr import db, login_manager
 
 
-class Users(db.Model):
+@login_manager.user_loader
+def user_loader(user_id):
+    return Users.query.get(int(user_id))
+
+
+class Users(db.Model, UserMixin):
     """Entidade Users"""
 
     id = db.Column(db.Integer, primary_key=True)
