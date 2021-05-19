@@ -16,6 +16,7 @@ class Users(db.Model, UserMixin):
     registration_number = db.Column(db.Integer, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password = db.Column(db.String, nullable=False)
+    special = db.Column(db.Boolean, nullable=False)
     positions = db.relationship("Positions")
 
     def __repr__(self):
@@ -26,9 +27,9 @@ class Positions(db.Model):
     """Entidade Positions"""
 
     id = db.Column(db.Integer, primary_key=True)
-    x_axis = db.Column(db.Integer)
-    y_axis = db.Column(db.Integer)
-    date_time = db.Column(db.DateTime, default=datetime.utcnow)
+    x_axis = db.Column(db.Integer, nullable=False)
+    y_axis = db.Column(db.Integer, nullable=False)
+    date_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __repr__(self):
