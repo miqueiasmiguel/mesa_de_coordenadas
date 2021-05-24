@@ -33,4 +33,9 @@ Algumas Informações:
 ====================================================================
 - Os arquivos '.flake8', '.pre-commit-config.yaml' e ''.pylintrc'
   são arquivos de configuração de alguns módulos instalados.
+
+- A pasta "flaskr" armazena todos os aqruivos relacionados ao flask.
+
+- A pasta serial_modules refere-se aos aquivos relacionados à comu-
+  nicação serial.
 ====================================================================
