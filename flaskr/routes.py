@@ -1,6 +1,7 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db, bcrypt
+from serial_modules import serial_ports
 from .forms import RegistrationForm, LoginForm, ForgotForm
 from .models import Users
 
@@ -10,13 +11,15 @@ from .models import Users
 def home():
     """Rota - Principal"""
 
-    return render_template("home.html", title="home")
+    ports = serial_ports()
+    return render_template("home.html", title="home", ports=ports)
 
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Rota - Login"""
+
     if current_user.is_authenticated:
         return redirect(url_for("home"))
     form = LoginForm()
@@ -26,8 +29,7 @@ def login():
             login_user(user, remember=form.remember.data)
             next_page = request.args.get("next")
             return redirect(next_page) if next_page else redirect(url_for("home"))
-        else:
-            flash("E-mail ou senha incorretos.", "danger")
+        flash("E-mail ou senha incorretos.", "danger")
 
     return render_template("login.html", title="Login", form=form)
 
@@ -70,5 +72,4 @@ def forgot():
     """Rota - Esqueceu a senha"""
 
     form = ForgotForm()
-
     return render_template("forgot.html", title="Esqueceu a senha?", form=form)

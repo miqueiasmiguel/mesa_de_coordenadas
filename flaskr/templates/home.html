@@ -1,3 +1,39 @@
 {% extends "layout.html" %}
+{% block navbar_config %}
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <img src="http://cdn.onlinewebfonts.com/svg/img_118367.png" width="25" height="25" alt="">
+        </a>
+        <div class="dropdown-menu">
+            <form>
+                <li>
+                    <div class="menu-item">
+                        Porta: 
+                    </div>
+                    <select name="serial_port" id="serial_port">
+                        {% for port in ports %}
+                            <option value="{{ port }}">{{ port }}</option>
+                        {% endfor %}
+                    </select>
+                </li>
+                <li>
+                    <div class="menu-item">
+                        Baud rate:
+                    </div>
+                    <select name="baud_rate" id="baud_rate">
+                        <option value="2400">2400</option>
+                        <option value="4800">4800</option>
+                        <option value="9600">9600</option>
+                        <option value="19200">19200</option>
+                    </select>
+                </li>
+                <div class="dropdown-divider"></div>
+                <button class="btn menu-item">Calibrar</button>
+                <button class="btn menu-item">Conectar</button>
+                <button class="btn menu-item">Desconectar</button>
+            </form>
+        </div>
+    </li>
+{% endblock navbar_config %}
 {% block content %}
-{% endblock %}
+{% endblock content %}

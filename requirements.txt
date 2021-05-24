@@ -34,6 +34,7 @@ pycodestyle==2.7.0
 pycparser==2.20
 pyflakes==2.3.1
 pylint==2.8.2
+pyserial==3.5
 PyYAML==5.4.1
 regex==2021.4.4
 six==1.16.0

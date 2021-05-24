@@ -5,11 +5,17 @@ from flaskr import db, login_manager
 
 @login_manager.user_loader
 def user_loader(user_id):
+    """
+    Função que busca no banco de dados o
+    usuário que será logado
+
+    :returns: Usuário a ser logado
+    """
     return Users.query.get(int(user_id))
 
 
 class Users(db.Model, UserMixin):
-    """Entidade Users"""
+    """Entidade - Users"""
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -24,7 +30,7 @@ class Users(db.Model, UserMixin):
 
 
 class Positions(db.Model):
-    """Entidade Positions"""
+    """Entidade - Positions"""
 
     id = db.Column(db.Integer, primary_key=True)
     x_axis = db.Column(db.Integer, nullable=False)

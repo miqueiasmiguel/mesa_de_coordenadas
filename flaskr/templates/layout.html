@@ -17,66 +17,42 @@
 </head>
 <body>
     <header class="site-header">
-        <nav class="navbar navbar-expand-md navbar-light bg-light">
-            <span class="navbar-brand mb-0 h1">Mesa de Coordenadas</span>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
-            <!-- Navbar Right Side -->
-            <div class="navbar-collapse">
-                <ul class="navbar-nav">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="d-flex flex-grow-1">
+                <span class="w-100 d-lg-none d-block"><!-- hidden spacer to center brand on mobile --></span>
+                <a class="navbar-brand" href="#">
+                    Mesa de Coordenadas
+                </a>
+                <div class="w-100 text-right">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNavbar7">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
+                <ul class="navbar-nav ml-auto flex-nowrap">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <img src="https://icons-for-free.com/iconfiles/png/512/help+icon-1320184117267379676.png" width="30" height="30" alt="">
+                        <a href="#" class="nav-link">
+                            <img src="https://cdn0.iconfinder.com/data/icons/entypo/92/help-512.png" width="25" height="25" alt="">
                         </a>
                     </li>
+                    <li class="nav-item">
+                        {% block navbar_config %}
+                        {% endblock navbar_config %}
+                    </li>   
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="http://cdn.onlinewebfonts.com/svg/img_118367.png" width="30" height="30" alt="">
-                        </a>
-                    <ul class="dropdown-menu">
-                        <form>
-                            <li>
-                                <div class="menu-item">
-                                    Porta: 
-                                </div>
-                                <select name="serial_port" id="serial_port">
-                                    <option value="COM-1">COM-1</option>
-                                    <option value="COM-2">COM-2</option>
-                                    <option value="COM-3">COM-3</option>
-                                    <option value="COM-4">COM-4</option>
-                                </select>
-                            </li>
-                            <li>
-                                <div class="menu-item">
-                                    Baud rate:
-                                </div>
-                                <select name="baud_rate" id="baud_rate">
-                                    <option value="2400">2400</option>
-                                    <option value="4800">4800</option>
-                                    <option value="9600">9600</option>
-                                    <option value="19200">19200</option>
-                                </select>
-                            </li>
-                            <div class="dropdown-divider"></div>
-                            <button class="btn menu-item">Calibrar</button>
-                            <button class="btn menu-item">Conectar</button>
-                            <button class="btn menu-item">Desconectar</button>
-                        </form>
-                    </ul>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="https://cdn.icon-icons.com/icons2/916/PNG/512/Menu_icon_icon-icons.com_71858.png" width="30" height="30" alt="">
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Perfil</a>
-                            <a class="dropdown-item" href="#">Cadastrar</a>
-                            <a class="dropdown-item" href="#">Histórico</a>
-                            <a class="dropdown-item" href="#">Sair</a>
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <img src="https://image.flaticon.com/icons/png/512/3686/3686994.png" width="25" height="25" alt="">
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <a class="dropdown-item" href="#">Cadstrar</a>
+                                <a class="dropdown-item" href="#">Histórico</a>
+                                <a class="dropdown-item" href="#">Sair</a>
+                            </div>
                         </div>
                     </li>
-                </li>
-            </ul>
+                </ul>
             </div>
         </nav>
     </header>
