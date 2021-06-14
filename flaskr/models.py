@@ -24,6 +24,7 @@ class Users(db.Model, UserMixin):
     password = db.Column(db.String, nullable=False)
     special = db.Column(db.Boolean, nullable=False)
     positions = db.relationship("Positions")
+    sessions = db.relationship("Sessions")
 
     def __repr__(self):
         return f"User('{self.name}', '{self.registration_number}', '{self.email}')"
@@ -40,3 +41,16 @@ class Positions(db.Model):
 
     def __repr__(self):
         return f"Position('{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
+
+
+class Sessions(db.Model):
+    """Entidade - Sessions"""
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    login_time = db.Column(db.Time, nullable=False)
+    logout_time = db.Column(db.Time, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+
+    def __repr__(self):
+        return f"Session('{self.date}','{self.login_time}','{self.logout_time}')"
