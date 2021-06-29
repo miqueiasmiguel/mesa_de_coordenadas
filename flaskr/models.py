@@ -1,56 +1,40 @@
-from datetime import datetime
 from flask_login import UserMixin
 from flaskr import db, login_manager
 
 
 @login_manager.user_loader
-def user_loader(user_id):
+def user_loader(reg_number):
     """
     Função que busca no banco de dados o
     usuário que será logado
 
     :returns: Usuário a ser logado
     """
-    return Users.query.get(int(user_id))
+    return Users.query.get(int(reg_number))
 
 
 class Users(db.Model, UserMixin):
     """Entidade - Users"""
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, nullable=False)
-    registration_number = db.Column(db.Integer, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String, nullable=False)
-    special = db.Column(db.Boolean, nullable=False)
-    positions = db.relationship("Positions")
-    sessions = db.relationship("Sessions")
+    __table__ = db.Model.metadata.tables["users"]
 
     def __repr__(self):
-        return f"User('{self.name}', '{self.registration_number}', '{self.email}')"
+        return f"User('{self.name}', '{self.reg_number}', '{self.special}')"
 
 
 class Positions(db.Model):
     """Entidade - Positions"""
 
-    id = db.Column(db.Integer, primary_key=True)
-    x_axis = db.Column(db.Integer, nullable=False)
-    y_axis = db.Column(db.Integer, nullable=False)
-    date_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    __table__ = db.Model.metadata.tables["positions"]
 
     def __repr__(self):
-        return f"Position('{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
+        return f"Position('{self.user_reg}', '{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
 
 
 class Sessions(db.Model):
     """Entidade - Sessions"""
 
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    login_time = db.Column(db.Time, nullable=False)
-    logout_time = db.Column(db.Time, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    __table__ = db.Model.metadata.tables["sessions"]
 
     def __repr__(self):
-        return f"Session('{self.date}','{self.login_time}','{self.logout_time}')"
+        return f"Session('{self.user_reg}', '{self.date}', '{self.login_time}', '{self.logout_time}')"

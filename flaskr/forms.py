@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, RadioField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, RadioField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flaskr.models import Users
 
@@ -11,7 +11,7 @@ class RegistrationForm(FlaskForm):
         "Tipo do usuário", choices=["Comum", "Especial"], validators=[DataRequired()]
     )
     name = StringField("Nome", validators=[DataRequired()])
-    registration_number = StringField("Matrícula", validators=[DataRequired()])
+    reg_number = StringField("Matrícula", validators=[DataRequired()])
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     password = PasswordField("Senha", validators=[DataRequired()])
     confirm_password = PasswordField(
@@ -29,15 +29,13 @@ class RegistrationForm(FlaskForm):
         if user:
             raise ValidationError("Um usuário já possui este e-mail")
 
-    def validate_registration_number(self, registration_number):
+    def validate_reg_number(self, reg_number):
         """
         Função para verificar se o
         banco de dados já possui um
         usuário com a mesma matrícula
         """
-        user = Users.query.filter_by(
-            registration_number=registration_number.data
-        ).first()
+        user = Users.query.filter_by(reg_number=reg_number.data).first()
         if user:
             raise ValidationError("Um usuário já possui esta matrícula")
 
@@ -45,9 +43,8 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     """Formulário para Login"""
 
-    email = StringField("E-mail", validators=[DataRequired(), Email()])
+    reg_number = StringField("Matícula", validators=[DataRequired()])
     password = PasswordField("Senha", validators=[DataRequired()])
-    remember = BooleanField("Lermbrar")
     submit = SubmitField("Entrar")
 
 

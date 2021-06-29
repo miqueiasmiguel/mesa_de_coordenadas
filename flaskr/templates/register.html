@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "base.html" %}
 {% block content %}
     <div>
         <form action="" method="POST">
@@ -28,16 +28,16 @@
                     {% endif %}
                 </div>
                 <div>
-                    {{ form.registration_number.label }}
-                    {% if form.registration_number.errors %}
-                        {{ form.registration_number(class="is-invalid") }}
+                    {{ form.reg_number.label }}
+                    {% if form.reg_number.errors %}
+                        {{ form.reg_number(class="is-invalid") }}
                         <div class="invalid-feedback">
-                            {% for error in form.registration_number.errors %}
+                            {% for error in form.reg_number.errors %}
                                 <span>{{ error }}</span>
                             {% endfor %}
                         </div>
                     {% else %}
-                        {{ form.registration_number }}
+                        {{ form.reg_number }}
                     {% endif %}
                 </div>
                 <div>
