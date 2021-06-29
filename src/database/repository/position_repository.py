@@ -28,7 +28,7 @@ class PositionRepository:
                          definindo a posição
         :return: Tupla com uma nova posição inserida
         """
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
@@ -47,7 +47,7 @@ class PositionRepository:
         """Deleta uma posição na tabela 'positions'
         :param id: id da posição
         """
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """

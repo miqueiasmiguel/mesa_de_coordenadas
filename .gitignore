@@ -3,3 +3,4 @@ venv
 *.db
 .vscode
 .mypy_cache
+.pytest_cache

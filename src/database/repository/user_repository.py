@@ -17,7 +17,7 @@ class UserRepository:
         :return: Tupla com o novo usuário inserido
         """
 
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
@@ -35,7 +35,7 @@ class UserRepository:
         """Deleta um usuário na tabela 'users'
         :param reg_number: Matrícula do usuário
         """
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
@@ -52,7 +52,7 @@ class UserRepository:
         :return: Lista contendo tuplas com as informações
                  dos usuários
         """
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """

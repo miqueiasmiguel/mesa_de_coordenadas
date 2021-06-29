@@ -16,7 +16,7 @@ class SessionRepository:
         :return: Tupla com os dados da sessão
         """
 
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
@@ -35,7 +35,7 @@ class SessionRepository:
         """Deleta uma sessão na tabela 'sessions'
         :param id: id da sessão
         """
-        connection = sqlite3.connect("storage.db")
+        connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """

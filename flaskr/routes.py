@@ -1,7 +1,7 @@
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db, bcrypt
-from serial_modules import serial_ports
+from src.serial_modules import serial_ports
 from .forms import RegistrationForm, LoginForm, ForgotForm
 from .models import Users
 
@@ -24,9 +24,9 @@ def login():
         return redirect(url_for("home"))
     form = LoginForm()
     if form.validate_on_submit():
-        user = Users.query.filter_by(email=form.email.data).first()
+        user = Users.query.filter_by(reg_number=form.reg_number.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember.data)
+            login_user(user)
             next_page = request.args.get("next")
             return redirect(next_page) if next_page else redirect(url_for("home"))
         flash("E-mail ou senha incorretos.", "danger")
@@ -55,7 +55,7 @@ def register():
         special = bool(form.user_type.data == "Especial")
         user = Users(
             name=form.name.data,
-            registration_number=form.registration_number.data,
+            reg_number=form.reg_number.data,
             email=form.email.data,
             password=hashed_password,
             special=special,
