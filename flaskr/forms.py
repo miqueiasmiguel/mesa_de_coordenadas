@@ -43,8 +43,8 @@ class RegistrationForm(FlaskForm):
 class LoginForm(FlaskForm):
     """Formulário para Login"""
 
-    reg_number = StringField("Matícula", validators=[DataRequired()])
-    password = PasswordField("Senha", validators=[DataRequired()])
+    reg_number = StringField("Matícula:", validators=[DataRequired()])
+    password = PasswordField("Senha:", validators=[DataRequired()])
     submit = SubmitField("Entrar")
 
 
