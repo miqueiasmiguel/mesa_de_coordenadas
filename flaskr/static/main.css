@@ -13,3 +13,18 @@ body{
         }
     }
     
+    .form-flex{    
+        display: flex;
+        justify-content: center;
+        margin: 3rem 0rem 3rem 0rem;
+    }
+    
+    .form-class{    
+        padding: 3rem 3rem 5rem 3rem;
+        background-color: white;
+    }
+    
+#logo_cear {
+    margin-left: 35%;
+    margin-top: -10px;
+}
