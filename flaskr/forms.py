@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, RadioField, SubmitField
+from wtforms import StringField, PasswordField, RadioField, SubmitField, FileField
 from wtforms.fields.core import IntegerField, SelectField
-from wtforms.fields.simple import FileField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flaskr.models import Users
 
@@ -58,7 +57,7 @@ class ForgotForm(FlaskForm):
 
 
 class ConfigurePort(FlaskForm):
-    """Formulário para configurar a porta"""
+    """Formulário para configurar a porta serial"""
 
     choices = []
     for number in range(1, 11):
@@ -66,16 +65,13 @@ class ConfigurePort(FlaskForm):
 
     port = SelectField("Porta:", choices=choices)
     baudrate = SelectField("Baud:", choices=[("9600", "9600"), ("19200", "19200")])
-    submit = SubmitField("Conectar")
+    configure_submit = SubmitField("Conectar")
 
 
-class MoveTableForm(FlaskForm):
+class ControlTableForm(FlaskForm):
     """Formulário para movimentar a mesa"""
 
-    move_type = RadioField(
-        "Tipo de movimento:", id="move_type", choices=["by_point", "by_trajectory"]
-    )
     x_axis = IntegerField("X:", id="x-axis")
     y_axis = IntegerField("Y:", id="y-axis")
     trajectory = FileField("Abrir", id="import-trajectory")
-    submit = SubmitField("Iniciar", id="start-btn")
+    control_submit = SubmitField("Iniciar", id="start-btn")

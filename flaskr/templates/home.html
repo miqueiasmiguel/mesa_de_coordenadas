@@ -21,7 +21,7 @@
                 </li>
                 <div class="dropdown-divider"></div>
                 <button class="btn menu-item">Calibrar</button>
-                {{ configure_form.submit }}
+                {{ configure_form.configure_submit }}
             </form>
         </div>
     </li>
@@ -32,9 +32,10 @@
         <br>
         <br>
         <form action={{ url_for("home") }} method="POST">
+                {{ move_form.hidden_tag() }}
                 <h6>Selecione o tipo de movimento:</h6>
                 <div id="movement-type" class="container">
-                    <br>
+                    <input type="radio" name="move_type" value=0 checked>
                     <label for="point">Digitar ponto:</label>
                     <br>
                     <label id="x-label">X:</label>
@@ -44,7 +45,7 @@
                     {{ move_form.y_axis }}
                     <br>
                     <br>
-                    {{ move_form.move_type.by_trajectory }}
+                    <input type="radio" name="move_type" value=1>
                     <label for="trajectory">Importar trajetória:</label>
                     <br>
                     {{ move_form.trajectory }}
@@ -55,7 +56,7 @@
                     <br>
                     <label id="table-status" for="">Status da mesa:</label>
                     <br>
-                    {{ move_form.submit }}
+                    {{ move_form.control_submit }}
                     <button id="stop-btn">Parar</button>
                 </div>
         </form>
