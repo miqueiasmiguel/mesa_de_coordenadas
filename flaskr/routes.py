@@ -1,12 +1,19 @@
 import json
 from random import random
 from time import time
+from pymodbus.exceptions import ConnectionException
 from flask import render_template, flash, url_for, redirect, request, make_response
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db, bcrypt
-from .forms import ConfigurePort, MoveTableForm, RegistrationForm, LoginForm, ForgotForm
+from src.serial_modules import configure_client, move_by_point
+from .forms import (
+    ConfigurePort,
+    RegistrationForm,
+    LoginForm,
+    ForgotForm,
+    ControlTableForm,
+)
 from .models import Users
-from src.serial_modules import configure_client
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -34,16 +41,35 @@ def home():
     """Rota - Principal"""
 
     configure_form = ConfigurePort()
-    move_form = MoveTableForm()
+    control_form = ControlTableForm()
 
-    if configure_form.validate_on_submit():
+    if configure_form.configure_submit.data and configure_form.validate_on_submit():
+        global client
+        print("configure_form validated!")
         port = configure_form.port.data
+        print("Port: {}".format(port))
         baudrate = int(configure_form.baudrate.data)
+        print("Baudrate: {}".format(baudrate))
         client = configure_client(port, baudrate)
-        client.connect()
+        print("Client: {}".format(client))
+
+    if control_form.control_submit.data and control_form.validate_on_submit():
+        print("move_form validated!")
+        print("Client: {}".format(client))
+        x_axis = control_form.x_axis.data
+        y_axis = control_form.y_axis.data
+        move_type = request.form["move_type"]
+        print("X: {}".format(x_axis))
+        print("Y: {}".format(y_axis))
+        print("Tipo de movimento: {}".format(move_type))
+
+        try:
+            move_by_point(x_axis, y_axis, client)
+        except ConnectionException:
+            flash("Erro ao tentar conectar", "error")
 
     return render_template(
-        "home.html", title="home", configure_form=configure_form, move_form=move_form
+        "home.html", title="home", configure_form=configure_form, move_form=control_form
     )
 
 

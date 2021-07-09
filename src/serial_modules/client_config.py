@@ -11,4 +11,5 @@ def configure_client(port, baudrate):
     client = ModbusClient(
         method="rtu", port=port, baudrate=baudrate, parity="N", timeout=1, bytesize=8
     )
+
     return client
