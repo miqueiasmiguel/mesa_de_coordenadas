@@ -1,5 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, RadioField, SubmitField
+from wtforms.fields.core import IntegerField, SelectField
+from wtforms.fields.simple import FileField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flaskr.models import Users
 
@@ -45,7 +47,7 @@ class LoginForm(FlaskForm):
 
     reg_number = StringField("Matícula:", validators=[DataRequired()])
     password = PasswordField("Senha:", validators=[DataRequired()])
-    submit = SubmitField("Entrar")
+    submit = SubmitField("Entrar", id="btn-login")
 
 
 class ForgotForm(FlaskForm):
@@ -53,3 +55,27 @@ class ForgotForm(FlaskForm):
 
     email = StringField("E-mail", validators=[DataRequired(), Email()])
     submit = SubmitField("Entrar")
+
+
+class ConfigurePort(FlaskForm):
+    """Formulário para configurar a porta"""
+
+    choices = []
+    for number in range(1, 11):
+        choices.append(("COM{}".format(number), "COM{}".format(number)))
+
+    port = SelectField("Porta:", choices=choices)
+    baudrate = SelectField("Baud:", choices=[("9600", "9600"), ("19200", "19200")])
+    submit = SubmitField("Conectar")
+
+
+class MoveTableForm(FlaskForm):
+    """Formulário para movimentar a mesa"""
+
+    move_type = RadioField(
+        "Tipo de movimento:", id="move_type", choices=["by_point", "by_trajectory"]
+    )
+    x_axis = IntegerField("X:", id="x-axis")
+    y_axis = IntegerField("Y:", id="y-axis")
+    trajectory = FileField("Abrir", id="import-trajectory")
+    submit = SubmitField("Iniciar", id="start-btn")

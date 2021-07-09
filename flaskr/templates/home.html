@@ -2,38 +2,63 @@
 {% block navbar_config %}
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <img src="http://cdn.onlinewebfonts.com/svg/img_118367.png" width="25" height="25" alt="">
+            <img src={{ url_for("static", filename="config_icon.png") }} width="25" height="25" alt="">
         </a>
         <div class="dropdown-menu">
-            <form>
+            <form action={{ url_for("home") }} method="POST">
+                {{ configure_form.hidden_tag() }}
                 <li>
                     <div class="menu-item">
-                        Porta: 
+                        {{ configure_form.port.label }} 
                     </div>
-                    <select name="serial_port" id="serial_port">
-                        {% for port in ports %}
-                            <option value="{{ port }}">{{ port }}</option>
-                        {% endfor %}
-                    </select>
+                    {{ configure_form.port }}
                 </li>
                 <li>
                     <div class="menu-item">
-                        Baud rate:
+                        {{ configure_form.baudrate.label }}
                     </div>
-                    <select name="baud_rate" id="baud_rate">
-                        <option value="2400">2400</option>
-                        <option value="4800">4800</option>
-                        <option value="9600">9600</option>
-                        <option value="19200">19200</option>
-                    </select>
+                    {{ configure_form.baudrate }}
                 </li>
                 <div class="dropdown-divider"></div>
                 <button class="btn menu-item">Calibrar</button>
-                <button class="btn menu-item">Conectar</button>
-                <button class="btn menu-item">Desconectar</button>
+                {{ configure_form.submit }}
             </form>
         </div>
     </li>
 {% endblock navbar_config %}
 {% block content %}
+<body>
+    <div id="table-control" class="container">
+        <br>
+        <br>
+        <form action={{ url_for("home") }} method="POST">
+                <h6>Selecione o tipo de movimento:</h6>
+                <div id="movement-type" class="container">
+                    <br>
+                    <label for="point">Digitar ponto:</label>
+                    <br>
+                    <label id="x-label">X:</label>
+                    <label id="y-label">Y:</label>
+                    <br>
+                    {{ move_form.x_axis }}
+                    {{ move_form.y_axis }}
+                    <br>
+                    <br>
+                    {{ move_form.move_type.by_trajectory }}
+                    <label for="trajectory">Importar trajetória:</label>
+                    <br>
+                    {{ move_form.trajectory }}
+                </div>
+                <br>
+                <h6>Iniciar envio para a mesa:</h6>
+                <div id="start-movement" class="container">
+                    <br>
+                    <label id="table-status" for="">Status da mesa:</label>
+                    <br>
+                    {{ move_form.submit }}
+                    <button id="stop-btn">Parar</button>
+                </div>
+        </form>
+    </div>
+</body>
 {% endblock content %}
