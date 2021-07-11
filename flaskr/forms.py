@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, RadioField, SubmitField, FileField
-from wtforms.fields.core import IntegerField, SelectField
+from wtforms.fields.core import SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from flaskr.models import Users
 
@@ -71,7 +71,7 @@ class ConfigurePort(FlaskForm):
 class ControlTableForm(FlaskForm):
     """Formulário para movimentar a mesa"""
 
-    x_axis = IntegerField("X:", id="x-axis")
-    y_axis = IntegerField("Y:", id="y-axis")
+    x_axis = StringField("X:", id="x-axis")
+    y_axis = StringField("Y:", id="y-axis")
     trajectory = FileField("Abrir", id="import-trajectory")
     control_submit = SubmitField("Iniciar", id="start-btn")

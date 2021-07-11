@@ -1,3 +1,4 @@
+from os.path import join, dirname, realpath
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -6,7 +7,13 @@ from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "26bea9fc38afd17bd034bf4234e4f6fb"
+
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///storage.db"
+
+app.config["UPLOAD_FOLDER"] = join(dirname(realpath(__file__)), "files")
+app.config["ALLOWED_FILE_EXTENSIONS"] = ["DXF", "TXT", "CSV"]
+
+
 db = SQLAlchemy(app)
 db.Model.metadata.reflect(db.engine)
 bcrypt = Bcrypt(app)
