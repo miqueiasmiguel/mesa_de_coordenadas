@@ -1,8 +1,7 @@
-import json
-from random import random
-from time import time
+import os
+from werkzeug.utils import secure_filename
 from pymodbus.exceptions import ConnectionException
-from flask import render_template, flash, url_for, redirect, request, make_response
+from flask import render_template, flash, url_for, redirect, request
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db, bcrypt
 from src.serial_modules import configure_client, move_by_point
@@ -14,6 +13,22 @@ from .forms import (
     ControlTableForm,
 )
 from .models import Users
+
+
+def allowed_file(filename):
+    """Define se o arquivo possui uma extensão válida
+    :param filename: recebe o nome do arquivo
+    :return: verdadeiro ou falso depenendo se é um
+             um arquivo válido ou não
+    """
+
+    if "." not in filename:
+        return False
+    ext = filename.rsplit(".", 1)[1]
+    if ext.upper() in app.config["ALLOWED_FILE_EXTENSIONS"]:
+        return True
+    else:
+        return False
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -42,59 +57,56 @@ def home():
 
     configure_form = ConfigurePort()
     control_form = ControlTableForm()
-
     if configure_form.configure_submit.data and configure_form.validate_on_submit():
         global client
-        print("configure_form validated!")
         port = configure_form.port.data
-        print("Port: {}".format(port))
         baudrate = int(configure_form.baudrate.data)
-        print("Baudrate: {}".format(baudrate))
         client = configure_client(port, baudrate)
-        print("Client: {}".format(client))
 
     if control_form.control_submit.data and control_form.validate_on_submit():
-        print("move_form validated!")
-        print("Client: {}".format(client))
         x_axis = control_form.x_axis.data
         y_axis = control_form.y_axis.data
+
+        if x_axis == "":
+            x_axis = 0
+        if y_axis == "":
+            y_axis = 0
+        if x_axis != 0:
+            x_axis = int(control_form.x_axis.data)
+        if y_axis != 0:
+            y_axis = int(control_form.y_axis.data)
+
         move_type = request.form["move_type"]
-        print("X: {}".format(x_axis))
-        print("Y: {}".format(y_axis))
+
+        if control_form.trajectory:
+            print("Existe uma trajetória!")
+            file = request.files["trajectory"]
+            if file.filename == "":
+                print("No filename")
+            if allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
+                print("File '{}' saved!".format(filename))
+
+        print("X: {} e seu tipo é {}".format(x_axis, type(x_axis)))
+        print("Y: {} e seu tipo é {}".format(y_axis, type(y_axis)))
         print("Tipo de movimento: {}".format(move_type))
 
-        try:
-            move_by_point(x_axis, y_axis, client)
-        except ConnectionException:
-            flash("Erro ao tentar conectar", "error")
+        if move_type == 0:
+            try:
+                move_by_point(x_axis, y_axis, client)
+            except ConnectionException:
+                flash("Erro ao tentar conectar", "error")
+
+        if move_type == 1:
+            pass
+
+    print("Erros no formulário de controle: {}".format(control_form.errors))
+    print("Erros no formulário de movimento: {}".format(configure_form.errors))
 
     return render_template(
         "home.html", title="home", configure_form=configure_form, move_form=control_form
     )
-
-
-@app.route("/data", methods=["GET", "POST"])
-def data():
-    """Rota - Data"""
-
-    # Data Format
-    # [TIME, Eixo_x, Eixo_y]
-
-    Eixo_x = random() * 100
-    Eixo_y = random() * 55
-
-    dados = [time() * 1000, Eixo_x, Eixo_y]
-
-    response = make_response(json.dumps(dados))
-
-    response.content_type = "application/json"
-
-    return response
-
-
-@app.route("/graphic", methods=["GET", "POST"])
-def graphic():
-    return render_template("graphic.html")
 
 
 @app.route("/register", methods=["GET", "POST"])

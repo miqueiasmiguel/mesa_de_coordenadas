@@ -31,7 +31,7 @@
     <div id="table-control" class="container">
         <br>
         <br>
-        <form action={{ url_for("home") }} method="POST">
+        <form action={{ url_for("home") }} method="POST" enctype="multipart/form-data">
                 {{ move_form.hidden_tag() }}
                 <h6>Selecione o tipo de movimento:</h6>
                 <div id="movement-type" class="container">
