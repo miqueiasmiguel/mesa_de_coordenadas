@@ -32,8 +32,6 @@ cursor.execute(
         y_axis INTEGER NOT NULL,
         date_time DATETIME NOT NULL,
         trajectory BLOB,
-        state VARCHAR NOT NULL,
-        velocity REAL NOT NULL,
         user_id INTEGER NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users(id)
     )

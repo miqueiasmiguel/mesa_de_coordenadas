@@ -1,10 +1,11 @@
 import os
+from os.path import join, dirname, realpath
 from werkzeug.utils import secure_filename
 from pymodbus.exceptions import ConnectionException
 from flask import render_template, flash, url_for, redirect, request
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db, bcrypt
-from src.serial_modules import configure_client, move_by_point
+from src.serial_modules import configure_client, move_by_point, move_by_trajectory
 from .forms import (
     ConfigurePort,
     RegistrationForm,
@@ -55,8 +56,12 @@ def login():
 def home():
     """Rota - Principal"""
 
+    user = current_user
+    user_reg = user.reg_number
+
     configure_form = ConfigurePort()
     control_form = ControlTableForm()
+
     if configure_form.configure_submit.data and configure_form.validate_on_submit():
         global client
         port = configure_form.port.data
@@ -94,12 +99,21 @@ def home():
 
         if move_type == 0:
             try:
-                move_by_point(x_axis, y_axis, client)
+                move_by_point(
+                    x_axis=x_axis, y_axis=y_axis, user_reg=user_reg, client=client
+                )
             except ConnectionException:
                 flash("Erro ao tentar conectar", "error")
 
         if move_type == 1:
-            pass
+            try:
+                move_by_trajectory(
+                    path=join(join(dirname(realpath(__file__)), "files"), filename),
+                    client=client,
+                    user_reg=user_reg,
+                )
+            except Exception:
+                flash("Ocorreu algum erro", "error")
 
     print("Erros no formulário de controle: {}".format(control_form.errors))
     print("Erros no formulário de movimento: {}".format(configure_form.errors))
@@ -110,7 +124,7 @@ def home():
 
 
 @app.route("/register", methods=["GET", "POST"])
-@login_required
+# @login_required
 def register():
     """Rota - Register"""
 
@@ -130,8 +144,11 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash(f"Conta criada para {form.name.data}.", "success")
+    print("Erros no formulário de cadastro: {}".format(form.errors))
 
-    return render_template("register.html", title="Cadastro", form=form)
+    users = Users.query.all()
+
+    return render_template("register.html", title="Cadastro", form=form, data=users)
 
 
 @app.route("/log")
