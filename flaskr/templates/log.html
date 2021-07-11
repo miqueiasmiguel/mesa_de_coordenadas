@@ -1,23 +1,25 @@
 {% extends "base.html" %}
 {% block content %}
 <body>
-    <table>
-        <tr>
-            <th>id</th>
-            <th>Matrícula</th>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Especial</th>
-        </tr>
-        {% for user in data %}
-        <tr>
-            <th>{{ user.id }}</th>
-            <th>{{ user.reg_number }}</th>
-            <th>{{ user.name }}</th>
-            <th>{{ user.email }}</th>
-            <th>{{ user.special }}</th>
-        </tr>
-        {% endfor %}
-    </table>
+    <div>
+        <table>
+            <tr>
+                <th>id</th>
+                <th>Matrícula</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Especial</th>
+            </tr>
+            {% for user in data %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.reg_number }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.special }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 </body>
 {% endblock content %}

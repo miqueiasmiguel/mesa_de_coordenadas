@@ -146,16 +146,16 @@ def register():
         flash(f"Conta criada para {form.name.data}.", "success")
     print("Erros no formulário de cadastro: {}".format(form.errors))
 
-    users = Users.query.all()
-
-    return render_template("register.html", title="Cadastro", form=form, data=users)
+    return render_template("register.html", title="Cadastro", form=form)
 
 
 @app.route("/log")
 def log():
     """Rota - Histórico"""
 
-    return render_template("log.html", title="Histórico")
+    users = Users.query.all()
+
+    return render_template("log.html", title="Histórico", data=users)
 
 
 @app.route("/forgot")
