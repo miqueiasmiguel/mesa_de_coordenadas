@@ -1,15 +1,22 @@
+from datetime import datetime
 from time import sleep, time
 from typing import Type
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from src.database.repository import PositionRepository
 
 
-def move_by_point(x_axis: int, y_axis: int, client: Type[ModbusClient]):
+def move_by_point(
+    x_axis: int, y_axis: int, user_reg: int, client: Type[ModbusClient], trajectory=None
+):
     """Função para movimentar a mesa por ponto
 
     :param x_axis: ponto no eixo x
     :param y_axis: ponto no eixo y
+    :param trajectory: nome do arquivo de trajetória
     :param client: cliente mestre modbus
     """
+
+    repository = PositionRepository()
 
     client.connect()
     sleep(1.7)
@@ -40,4 +47,20 @@ def move_by_point(x_axis: int, y_axis: int, client: Type[ModbusClient]):
             print("Eixo Y OK!")
             break
 
+    if trajectory:
+        repository.insert_position(
+            x_axis=x_response[0],
+            y_axis=y_response[0],
+            date_time=datetime.now(),
+            trajectory=trajectory,
+            user_reg=user_reg,
+        )
+    else:
+        repository.insert_position(
+            x_axis=x_response[0],
+            y_axis=y_response[0],
+            date_time=datetime.now(),
+            trajectory=None,
+            user_reg=user_reg,
+        )
     client.close()
