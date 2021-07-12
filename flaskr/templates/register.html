@@ -9,7 +9,7 @@
                     <h5>Cadastro de usuário</h5>
                     <br>
                     <div>
-                        {{ form.user_type.label }}
+                        {{ form.user_type.label }}</br>
                         {% for subfield in form.user_type %}
                             <tr>
                                 <td>{{ subfield }}</td>
@@ -18,7 +18,7 @@
                         {% endfor %}
                     </div>
                     <div>
-                        {{ form.name.label }}
+                        {{ form.name.label }}</br>
                         {% if form.name.errors %}
                             {{ form.name(class="is-invalid") }}
                             <div class="invalid-feedback">
@@ -31,7 +31,7 @@
                         {% endif %}
                     </div>
                     <div>
-                        {{ form.reg_number.label }}
+                        {{ form.reg_number.label }}</br>
                         {% if form.reg_number.errors %}
                             {{ form.reg_number(class="is-invalid") }}
                             <div class="invalid-feedback">
@@ -44,7 +44,7 @@
                         {% endif %}
                     </div>
                     <div>
-                        {{ form.email.label }}
+                        {{ form.email.label }}</br>
                         {% if form.email.errors %}
                             {{ form.email(class="is-invalid") }}
                             <div class="invalid-feedback">
@@ -57,7 +57,7 @@
                         {% endif %}
                     </div>
                     <div>
-                        {{ form.password.label }}
+                        {{ form.password.label }}</br>
                         {% if form.password.errors %}
                             {{ form.password(class="is-invalid") }}
                             <div class="invalid-feedback">
@@ -69,7 +69,7 @@
                             {{ form.password }}
                         {% endif %}
                     </div><div>
-                        {{ form.confirm_password.label }}
+                        {{ form.confirm_password.label }}</br>
                         {% if form.confirm_password.errors %}
                             {{ form.confirm_password(class="is-invalid") }}
                             <div class="invalid-feedback">

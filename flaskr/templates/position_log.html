@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Posições definidas</h5>
+            <a href={{ url_for("download_position") }} target="_blank">Baixar o histórico</a>   
+            <div class="mt-4">
+                <table id="proxies" class="display table nowrap responsive" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Eixo X</th>
+                        <th>Eixo Y</th>
+                        <th>Trajetória</th>
+                        <th>Data e hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for position in positions %}
+                    <tr>
+                        <td>{{ position[0] }}</td>
+                        <td>{{ position[1] }}</td>
+                        <td>{{ position[2] }}</td>
+                        <td>{{ position[3] }}</td>
+                        <td>{{ position[4] }}</td>
+                        <td>{{ position[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $('#proxies').DataTable();
+</script>
+{% endblock content %}

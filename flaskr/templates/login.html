@@ -2,7 +2,7 @@
 {% block content %}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
 
-    <div class= "form-flex">
+    <div class="form-flex">
         <div class ="form-class">
             <article>
                 <img id="logo_cear" src="{{url_for('static', filename='logocear150.png')}}" alt="Logo CEAR" width="50" height="50">
@@ -41,7 +41,7 @@
                 </form>
                 <br> 
                 <div>
-                    <a href="{{ url_for('forgot') }}" target="blanck">redefinir senha</a>
+                    <a href="{{ url_for('forgot') }}" target="blanck">Esqueceu a senha?</a>
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#infosenha">i</button>
                 </div>
             </article>
@@ -56,7 +56,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Use para redefinir senha
+                    Use para enviar a sua senha para seu e-mail
                 </div>
             </div>
         </div>

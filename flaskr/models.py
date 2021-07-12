@@ -28,7 +28,7 @@ class Positions(db.Model):
     __table__ = db.Model.metadata.tables["positions"]
 
     def __repr__(self):
-        return f"Position('{self.user_reg}', '{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
+        return f"Position('{self.user_id}', '{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
 
 
 class Sessions(db.Model):
@@ -37,4 +37,4 @@ class Sessions(db.Model):
     __table__ = db.Model.metadata.tables["sessions"]
 
     def __repr__(self):
-        return f"Session('{self.user_reg}', '{self.date}', '{self.login_time}', '{self.logout_time}')"
+        return f"Session('{self.user_id}', '{self.date}', '{self.login_time}', '{self.logout_time}')"

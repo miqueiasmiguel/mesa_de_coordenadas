@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+
+    <div class="card">
+        <div class="card-body">
+            <h5>Sessões estabelecidas</h5>
+            <a href={{ url_for("download_session") }} target="_blank">Baixar o histórico</a>    
+            <div class="mt-4">
+                <table id="proxies" class="display table nowrap responsive" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nome</th>
+                        <th>Hora de login</th>
+                        <th>Duração</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for session in sessions %}
+                    <tr>
+                        <td>{{ session[0] }}</td>
+                        <td>{{ session[1] }}</td>
+                        <td>{{ session[2] }}</td>
+                        <td>{{ session[3] }}</td>
+                        <td>{{ session[4] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    $('#proxies').DataTable();
+</script>
+{% endblock content %}
