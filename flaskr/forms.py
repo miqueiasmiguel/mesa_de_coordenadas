@@ -53,7 +53,7 @@ class ForgotForm(FlaskForm):
     """Formulário para recuperação de senha"""
 
     email = StringField("E-mail", validators=[DataRequired(), Email()])
-    submit = SubmitField("Entrar")
+    submit = SubmitField("Enviar")
 
 
 class ConfigurePort(FlaskForm):

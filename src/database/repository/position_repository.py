@@ -12,31 +12,31 @@ class PositionRepository:
         y_axis: int,
         date_time: datetime,
         trajectory: Any,
-        user_reg: int,
+        user_id: int,
     ) -> Tuple:
         """Insere uma nova posição na tabela 'positions'
         :param x_axis: Posição no eixo x
         :param y_axis: Posição no eixo y
         :param date_time: Data e hora do registro
         :param trajectory: Arquivo de trajetória
-        :param user_reg: Matrícula do usuário que está
-                         definindo a posição
+        :param user_id: id do usuário que está
+                        definindo a posição
         :return: Tupla com uma nova posição inserida
         """
         connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
-        INSERT INTO positions (x_axis, y_axis, date_time, trajectory, user_reg)
+        INSERT INTO positions (x_axis, y_axis, date_time, trajectory, user_id)
         VALUES (?, ?, ?, ?, ?)
         """,
-            (x_axis, y_axis, date_time, trajectory, user_reg),
+            (x_axis, y_axis, date_time, trajectory, user_id),
         )
         connection.commit()
         id = cursor.lastrowid
         connection.close()
 
-        return (id, x_axis, y_axis, date_time, trajectory, user_reg)
+        return (id, x_axis, y_axis, date_time, trajectory, user_id)
 
     def delete_position(self, id: int):
         """Deleta uma posição na tabela 'positions'

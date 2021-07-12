@@ -7,12 +7,12 @@ class SessionRepository:
     """Classe para administrar o repositório de 'sessions'"""
 
     def insert_session(
-        self, login_time: datetime, logout_time: datetime, user_reg: int
+        self, login_time: datetime, logout_time: datetime, user_id: int
     ) -> Tuple:
         """Insere um novo registro de sessão na tabela 'sessions'
         :param login_time: Horário em que a sessão foi estabelecida
         :param logout_time: Horário em que a sessão foi finalizada
-        :param user_reg: Matrícula do usuário que estabeleceu a sessão
+        :param user_id: Id do usuário que estabeleceu a sessão
         :return: Tupla com os dados da sessão
         """
 
@@ -20,16 +20,16 @@ class SessionRepository:
         cursor = connection.cursor()
         cursor.execute(
             """
-        INSERT INTO sessions (login_time, logout_time, user_reg)
+        INSERT INTO sessions (login_time, logout_time, user_id)
         VALUES (?, ?, ?)
         """,
-            (login_time, logout_time, user_reg),
+            (login_time, logout_time, user_id),
         )
         connection.commit()
         id = cursor.lastrowid
         connection.close()
 
-        return (id, login_time, logout_time, user_reg)
+        return (id, login_time, logout_time, user_id)
 
     def delete_session(self, id: int):
         """Deleta uma sessão na tabela 'sessions'
