@@ -69,7 +69,8 @@ img#help {
 /* Configurar movimento*/
 div#movement-type {
     border: 1px solid #000;
-    padding-bottom: 6%;
+    padding-top: 2%;
+    padding-bottom: 3%;
 }
 
 div#table-control {
@@ -104,10 +105,37 @@ input#import-trajectory {
     width: 95%;
 }
 
+/* Definir velocidade */
+
+div#set-speed {
+    border: 1px solid #000;
+    padding-top: 2%;
+    padding-bottom: 3%;
+}
+
+label#x-speed-label {
+    margin-left: 6%;
+}
+
+label#y-speed-label {
+    margin-left: 30%;
+}
+
+input#x-speed {
+    margin-left: 6%;
+    width: 31%;
+}
+
+input#y-speed {
+    width: 31%;
+    margin-left: 15%
+}
+
 /* Iniciar envio para a mesa */
 div#start-movement {
     border: 1px solid #000;
-    padding-bottom: 6%;
+    padding-top: 2%;
+    padding-bottom: 3%;
 }
 
 label#table-status {
