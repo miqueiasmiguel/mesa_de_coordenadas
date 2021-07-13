@@ -73,8 +73,8 @@ div#movement-type {
 }
 
 div#table-control {
-    margin-left: 8%;
-    padding-right: 55%;
+    display: table-cell;
+    width: 30%;
 }
 
 input#move_type-1 {
@@ -124,4 +124,29 @@ button#stop-btn {
     margin-left: 0%;
     padding: 3%;
     width: 44%;
+}
+
+div#grafico {
+    display: table-cell;
+    width: 50%;
+}
+
+.container-fluid {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: -1%;
+}
+
+div#cabecalho {
+    text-align: center;
+    width: 50%;
+    margin-left: 11%;
+}
+
+div#ajuda {
+    margin-left: 4%;
+    margin-right: 4%;
 }

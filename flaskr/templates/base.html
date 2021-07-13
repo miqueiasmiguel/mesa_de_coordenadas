@@ -7,13 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <!-- JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -32,6 +27,11 @@
     <script type = "text/javascript"  src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
     <script type = "text/javascript"  src="https://cdn.datatables.net/plug-ins/1.10.15/dataRender/datetime.js"></script>
    
+    <!--High CHART LIVE  -->
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/highcharts-more.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
@@ -59,7 +59,7 @@
             <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
                 <ul class="navbar-nav ml-auto flex-nowrap">
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <a href={{ url_for("help") }} class="nav-link">
                             <img id="help" src={{ url_for("static", filename="help_icon.png") }} width="25" height="25" alt="">
                         </a>
                     </li>
@@ -74,10 +74,18 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href={{ url_for("home")}}>Início</a>
-                                <a class="dropdown-item" href={{ url_for("register")}}>Cadstrar</a>
-                                <a class="dropdown-item" href={{ url_for("position_log") }}>Histórico de Posições</a>
+                                {% if current_user.special == "1" %}
+                                    <a class="dropdown-item" href={{ url_for("register")}}>Cadstrar</a>
+                                {% endif %}
+                                {% if current_user.special == "1" %}
+                                    <a class="dropdown-item" href={{ url_for("position_log") }}>Histórico de Posições</a>
+                                {% endif %}
+                                {% if current_user.special == "1" %}
                                 <a class="dropdown-item" href={{ url_for("session_log") }}>Histórico de Sessões</a>
+                                {% endif %}
+                                {% if current_user.special == "1" %}
                                 <a class="dropdown-item" href={{ url_for("registered_users") }}>Usuários cadastrados</a>
+                                {% endif %}
                                 <a class="dropdown-item" href={{ url_for("logout") }}>Sair</a>
                             </div>
                         </div>

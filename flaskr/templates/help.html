@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <div id="ajuda">
+        <br>
+        <h1>Ajuda</h1>
+        <br>
+        <h6>Configurações</h6>
+        <p>Seleciona-se a porta serial em que a mesa está inserida, assim como o Baud Rate de comunicação entre a mesa e o programa. Após selecionar as configurações deve-se clicar no botão configurar para atualizar as informações.</p>
+        <p><b>**IMPORTANTE**</b>O movimento só terá início se a porta estiver <b>configurada</b>.</p>
+        <br>
+        <h6>Tipo de movimento</h6> 
+        <p>Pode ser enviado a mesa dois tipos de movimentos, digitando um ponto de desejo por vez ou importando um arquivo .txt com todos os pontos de interesse.</p>
+        <p><b>**IMPORTANTE**</b> O arquivo deve ter o formato: "eixo_x eixo_y", a cada linha o ponto (coordenadas x e y separadas por espaço). </p>
+        <br>
+        <h6>Iniciar envio para a mesa:</h6>
+        <p>O botão "Iniciar" comunica-se com a mesa, enviando os dados selecionados na sessão anterior, enqaunto houver pontos para serem enviados, o programa mantém a comunicação com a mesa, ao fim esse envio de dados é encerrado.
+        O botão "Parar" envia um comando de parada de emergência a mesa, parando todos os motores dessa para evitar possíveis acidentes.</p>
+        <br>
+        <h6>Gráficos</h6>
+        <p>Demonstram as posições atuais da mesa ao longo do tempo, cada gráfico representa um eixo de coordenadas da mesa.</p>
+        <br>
+        <h6>Páginas</h6>
+        <p>O ícone de páginas apresenta as páginas do programa, contendo o cadastro (somente acessível por usuários especiais), histótico de posições e sessões (somente acessível por usuários especiais), usuários cadastrados (somente acessível por usuários especiais), página de início (ou principal) e o botão de sair (logout do site).</p>
+        <br>
+        <h6>Cadastro</h6> 
+        <p>O usuário apto reallizará o cadastro de um novo usuário, inserindo seus dados de acordo como é pedido em cada campo. Importante ressaltar o campo de seleção do tipo de usuário, usuários especiais têm pleno acesso a todas as funções do programa, usuários comuns apresentam certas restrições (para medidas de segurança do equipamento e do programa). Após preencher todo os campos, basta selecionar cadastrar e receber a confirmação da operação realizada com sucesso.</p>
+        <br>
+        <h6>Esquecer a senha</h6>
+        <p>Caso o usuário esqueça a senha, basta selecionar o campo na tela de login e preencher seu email e clicar no botão confirmando, sua senha será enviada por email automaticamente. </p>
+        <br>
+        <h6>Histórico de posições</h6>
+        <p>Contém os pontos que foram enviados do programa para a mesa, onde está demonstrado o usuário que enviou o ponto, as coordenadas deste ponto, caso esse ponto seja originário de um arquivo importado, o nome do arquivo também está descrito, assim como o horário em que a mesa chegou a essa posição. É possível realizar o download da tabela clicando no botão superior esquerdo "Baixar histórico".</p>
+        <br>
+        <h6>Histórico de sessões</h6> 
+        <p>Contém a sessão do usuário ao utilizar o programa, então a tabela apresenta o nome e matrícula do indivíduo, assim como seu horário de login e o tempo total que ficou utilizando o programa (em minutos). É possível realizar o download da tabela clicando no botão superior esquerdo "Baixar histórico".</p>
+        <br>
+        <h6>Usuários Cadastrados</h6>
+        <p>Lista dos usuários com acesso ao programa (cadastrados), são infomados matrícula, nome, email e o indentificador de usuário especial (1 para especial e 0 para comum). É possível realizar o download da tabela clicando no botão superior esquerdo "Baixar esta tabela".</p>
+
+    </div>
+</body>
+{% endblock content %}
