@@ -22,10 +22,12 @@ Configurações Iniciais:
 - Instale as dependencias do projeto com o comando 
   'pip3 install -r requirements.txt'
 
-- Instale o pre-commit com 'pre-commit install'
+- Instale o pre-commit com 'pre-commit install' (apenas se pretende alterar o repositório)
 
 - Para criar um banco de dados, rode o script 'Mesa de Coordenadas/database/create_db.py'
   alterando caminho do diretório que ele será criado.
+  
+- Rode o servidor executando o arquivo 'run.py'
 ====================================================================
 
 
