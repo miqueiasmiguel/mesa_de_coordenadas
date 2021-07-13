@@ -62,7 +62,7 @@ def home():
     """Rota - Principal"""
 
     user = current_user
-    user_reg = user.reg_number
+    user_id = user.id
 
     configure_form = ConfigurePort()
     control_form = ControlTableForm()
@@ -86,10 +86,9 @@ def home():
         if y_axis != 0:
             y_axis = int(control_form.y_axis.data)
 
-        move_type = request.form["move_type"]
+        move_type = int(request.form["move_type"])
 
         if control_form.trajectory:
-            print("Existe uma trajetória!")
             file = request.files["trajectory"]
             if file.filename == "":
                 print("No filename")
@@ -98,14 +97,10 @@ def home():
                 file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
                 print("File '{}' saved!".format(filename))
 
-        print("X: {} e seu tipo é {}".format(x_axis, type(x_axis)))
-        print("Y: {} e seu tipo é {}".format(y_axis, type(y_axis)))
-        print("Tipo de movimento: {}".format(move_type))
-
         if move_type == 0:
             try:
                 move_by_point(
-                    x_axis=x_axis, y_axis=y_axis, user_reg=user_reg, client=client
+                    x_axis=x_axis, y_axis=y_axis, user_id=user_id, client=client
                 )
             except ConnectionException:
                 flash("Erro ao tentar conectar", "error")
@@ -115,13 +110,10 @@ def home():
                 move_by_trajectory(
                     path=join(join(dirname(realpath(__file__)), "files"), filename),
                     client=client,
-                    user_reg=user_reg,
+                    user_id=user_id,
                 )
             except Exception:
                 flash("Ocorreu algum erro", "error")
-
-    print("Erros no formulário de controle: {}".format(control_form.errors))
-    print("Erros no formulário de movimento: {}".format(configure_form.errors))
 
     return render_template(
         "home.html", title="home", configure_form=configure_form, move_form=control_form
