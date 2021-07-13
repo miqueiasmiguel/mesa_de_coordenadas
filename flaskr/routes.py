@@ -4,6 +4,7 @@ import io
 import smtplib
 import csv
 import json
+import struct
 from time import time, sleep
 from email.message import EmailMessage
 from os.path import join, dirname, realpath
@@ -120,6 +121,40 @@ def home():
             except ValueError:
                 flash("Por favor, digite valores inteiros no eixo Y.", "error")
 
+        x_speed = control_form.x_speed.data
+        y_speed = control_form.y_speed.data
+        print("Velocidade X: {}\nSeu tipo: {}".format(x_speed, type(x_speed)))
+        print("Velocidade Y: {}\nSeu tipo: {}".format(y_speed, type(y_speed)))
+
+        if x_speed != 0:
+            try:
+                x_speed = int(control_form.x_speed.data)
+            except ValueError:
+                flash(
+                    "Por favor, digite valores inteiros para a velocidade no eixo X.",
+                    "error",
+                )
+        if y_speed != 0:
+            try:
+                y_speed = int(control_form.y_speed.data)
+            except ValueError:
+                flash(
+                    "Por favor, digite valores inteiros para a velocidade no eixo Y.",
+                    "error",
+                )
+
+        try:
+            client.connect()
+            sleep(1.7)
+            client.write_register(544, x_speed, unit=1)
+            client.write_register(560, x_speed, unit=1)
+        except ConnectionException:
+            flash("Erro ao tentar conectar-se", "error")
+        except struct.error:
+            flash(
+                "Você não definiu uma velocidade ou o valor definido não é um inteiro"
+            )
+
         move_type = int(request.form["move_type"])
 
         if control_form.trajectory:
@@ -138,7 +173,7 @@ def home():
                 client.write_register(512, x_axis, unit=1)
                 timeout = time() + 7
                 while True:
-                    x_response = client.read_holding_registers(512, 1, unit=1)
+                    x_response = client.read_holding_registers(220, 1, unit=1)
                     act_x = x_response.registers[0]
                     print("X: {}".format(act_x))
                     if time() > timeout:
@@ -151,11 +186,14 @@ def home():
                 client.write_register(528, y_axis, unit=1)
                 timeout = time() + 7
                 while True:
-                    y_response = client.read_holding_registers(528, 1, unit=1)
+                    y_response = client.read_holding_registers(230, 1, unit=1)
                     act_y = y_response.registers[0]
                     print("Y: {}".format(act_y))
                     if time() > timeout:
                         print("Erro de timeout")
+                        break
+                    if y_axis == act_y:
+                        print("Eixo Y OK!")
                         break
 
                 repository.insert_position(
@@ -183,7 +221,7 @@ def home():
                         client.write_register(512, x_axis, unit=1)
                         timeout = time() + 7
                         while True:
-                            x_response = client.read_holding_registers(512, 1, unit=1)
+                            x_response = client.read_holding_registers(220, 1, unit=1)
                             act_x = x_response.registers[0]
                             print("X: {}".format(act_x))
                             if time() > timeout:
@@ -196,7 +234,7 @@ def home():
                         client.write_register(528, y_axis, unit=1)
                         timeout = time() + 7
                         while True:
-                            y_response = client.read_holding_registers(528, 1, unit=1)
+                            y_response = client.read_holding_registers(230, 1, unit=1)
                             act_y = y_response.registers[0]
                             print("Y: {}".format(act_y))
                             if time() > timeout:
@@ -229,7 +267,7 @@ def home():
 
 @app.route("/register", methods=["GET", "POST"])
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def register():
     """Rota - Register"""
 
@@ -253,7 +291,7 @@ def register():
 
 @app.route("/position_log")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def position_log():
     """Rota - Histórico de posições"""
 
@@ -269,7 +307,7 @@ def position_log():
 
 @app.route("/session_log")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def session_log():
     """Rota - Histórico de sessões"""
 
@@ -285,7 +323,7 @@ def session_log():
 
 @app.route("/registered_users")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def registered_users():
     """Rota - Usuários cadastrados"""
 
@@ -333,7 +371,7 @@ def forgot():
 
 @app.route("/download/position_log")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def download_position():
     """Rota - Download da posição"""
 
@@ -367,7 +405,7 @@ def download_position():
 
 @app.route("/download/session_log")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def download_session():
     """Rota - Download da posição"""
 
@@ -399,7 +437,7 @@ def download_session():
 
 @app.route("/download/users")
 @login_required
-@requires_roles("1")
+@requires_roles(True)
 def download_users():
     """Rota - Download da posição"""
 

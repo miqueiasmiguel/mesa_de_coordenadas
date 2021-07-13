@@ -74,16 +74,16 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href={{ url_for("home")}}>Início</a>
-                                {% if current_user.special == "1" %}
+                                {% if current_user.special == True %}
                                     <a class="dropdown-item" href={{ url_for("register")}}>Cadstrar</a>
                                 {% endif %}
-                                {% if current_user.special == "1" %}
+                                {% if current_user.special == True %}
                                     <a class="dropdown-item" href={{ url_for("position_log") }}>Histórico de Posições</a>
                                 {% endif %}
-                                {% if current_user.special == "1" %}
+                                {% if current_user.special == True %}
                                 <a class="dropdown-item" href={{ url_for("session_log") }}>Histórico de Sessões</a>
                                 {% endif %}
-                                {% if current_user.special == "1" %}
+                                {% if current_user.special == True %}
                                 <a class="dropdown-item" href={{ url_for("registered_users") }}>Usuários cadastrados</a>
                                 {% endif %}
                                 <a class="dropdown-item" href={{ url_for("logout") }}>Sair</a>

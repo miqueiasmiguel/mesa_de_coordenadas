@@ -73,5 +73,7 @@ class ControlTableForm(FlaskForm):
 
     x_axis = StringField("X:", id="x-axis")
     y_axis = StringField("Y:", id="y-axis")
+    x_speed = StringField("Eixo X: ", id="x-speed")
+    y_speed = StringField("Eixo Y: ", id="y-speed")
     trajectory = FileField("Abrir", id="import-trajectory")
     control_submit = SubmitField("Iniciar", id="start-btn")

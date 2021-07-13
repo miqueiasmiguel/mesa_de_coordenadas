@@ -33,7 +33,7 @@
     <div id="table-control" class="container">
         <br>
         <br>
-        <form action={{ url_for("home") }} method="POST" enctype="multipart/form-data">
+        <form id="control-form" action={{ url_for("home") }} method="POST" enctype="multipart/form-data">
                 {{ move_form.hidden_tag() }}
                 <h6>Selecione o tipo de movimento:</h6>
                 <div id="movement-type" class="container">
@@ -53,9 +53,17 @@
                     {{ move_form.trajectory }}
                 </div>
                 <br>
+                <h6>Defina a velocidade dos motores:</h6>
+                <div id="set-speed" class="container">
+                    <label id="x-speed-label">Eixo X:</label>
+                    <label id="y-speed-label">Eixo Y:</label>
+                    <br>
+                    {{ move_form.x_speed }}
+                    {{ move_form.y_speed }}
+                </div>
+                <br>
                 <h6>Iniciar envio para a mesa:</h6>
                 <div id="start-movement" class="container">
-                    <br>
                     <label id="table-status" for="">Status da mesa:</label>
                     <br>
                     {{ move_form.control_submit }}
@@ -212,8 +220,6 @@
                         data: []
                     }]
                 });
-
-
             });
         </script>
         </div>
