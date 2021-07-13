@@ -1,6 +1,6 @@
 import sqlite3
 import datetime
-from typing import Any, Tuple
+from typing import Tuple, List
 
 
 class PositionRepository:
@@ -11,8 +11,8 @@ class PositionRepository:
         x_axis: int,
         y_axis: int,
         date_time: datetime,
-        trajectory: Any,
         user_id: int,
+        trajectory=None,
     ) -> Tuple:
         """Insere uma nova posição na tabela 'positions'
         :param x_axis: Posição no eixo x
@@ -38,17 +38,25 @@ class PositionRepository:
 
         return (id, x_axis, y_axis, date_time, trajectory, user_id)
 
-    def delete_position(self, id: int):
-        """Deleta uma posição na tabela 'positions'
-        :param id: id da posição
+    def select_all(self) -> List[Tuple]:
+        """Consulta todas  as posições na tabela 'positions'
+            com os atributos: nome, eixo x, eixo y, trajetória
+            e date e hora, ordenadas pelo horário em que a
+            posição foi definida
+
+        :return: Lista contendo tuplas com as informações
+                 das posições
         """
         connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
-        DELETE FROM positions WHERE id = ?
-        """,
-            (id,),
+        SELECT u.name, p.x_axis, p.y_axis, p.trajectory, p.date_time
+        FROM users AS u, positions AS p
+        WHERE u.id = p.user_id
+        ORDER BY p.date_time DESC
+        """
         )
-        connection.commit()
-        connection.close()
+        rows = cursor.fetchall()
+
+        return rows

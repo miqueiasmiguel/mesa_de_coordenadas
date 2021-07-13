@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block navbar_config %}
+
     <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <img src={{ url_for("static", filename="config_icon.png") }} width="25" height="25" alt="">
@@ -20,7 +21,6 @@
                     {{ configure_form.baudrate }}
                 </li>
                 <div class="dropdown-divider"></div>
-                <button class="btn menu-item">Calibrar</button>
                 {{ configure_form.configure_submit }}
             </form>
         </div>
@@ -28,6 +28,8 @@
 {% endblock navbar_config %}
 {% block content %}
 <body>
+<div id="corpo" style="width: 100%; display: table;">
+    <div style="display: table-row">
     <div id="table-control" class="container">
         <br>
         <br>
@@ -61,5 +63,161 @@
                 </div>
         </form>
     </div>
+    <br>
+    <div id="grafico">
+        <br>
+        <div class="container-fluid">
+            <div id="cabecalho" class="row">
+                <div class="col-5 jumbotron p-1 mx-1">
+                    <h6 class="sensor1"> Sensor : </h6>
+                </div>
+                <div class="col-5 jumbotron p-1 mx-1">
+                    <h6 class="sensor2">Sensor :</h6>
+                </div>
+            </div>   
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container-fluid" id="data-temperature">
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="container-fluid" id="data-humidity">
+                </div>
+            </div>
+        </div>
+
+        <script>
+            var chartTemperatue;
+            var chartHumidity;
+
+            function requestData()
+            {
+                // Ajax call to get the Data from Flask
+                var requests = $.get('/data');
+
+                var tm = requests.done(function (result)
+                {
+                    // Temperature
+                    var seriesTemperature = chartTemperatue.series[0],
+                        shiftTemperature = seriesTemperature.data.length > 20;
+
+                    // Humidity
+                    var seriesHumidity = chartHumidity.series[0],
+                        shiftHumidity = seriesTemperature.data.length > 20;
+
+                    // Add the Point
+                    // Time Temperature\
+                    var data1 = [];
+                    data1.push(result[0]);
+                    data1.push(result[1]);
+
+
+                    // Add the Point
+                    // Time Humidity
+                    var data2 = [];
+                    data2.push(result[0]);
+                    data2.push(result[2]);
+
+
+                    chartTemperatue.series[0].addPoint(data1, true, shiftTemperature);
+                    chartHumidity.series[0].addPoint(data2, true, shiftHumidity);
+                    $(".sensor1").text("");
+                    $(".sensor1").text("Eixo X : " +  Math.round(data1[1]) );
+
+                    $(".sensor2").text("");
+                    $(".sensor2").text("Eixo Y : " +  Math.round(data2[1]) );
+
+                    // call it again after one second
+                    setTimeout(requestData, 2000);
+
+                });
+            }
+
+            $(document).ready(function()
+            {
+                // --------------Chart 1 ----------------------------
+                chartTemperatue = new Highcharts.Chart({
+                    chart:
+                        {
+                        renderTo: 'data-temperature',
+                        width:600,
+                        height:240,
+                        defaultSeriesType: 'area',
+                        events: {
+                            load: requestData
+                                }
+                        },
+                    title:
+                        {
+                        text: 'Eixo X'
+                        },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 150,
+                        maxZoom: 20 * 1000
+                            },
+                    yAxis: {
+                        minPadding: 0.2,
+                        maxPadding: 0.2,
+                        title: {
+                            text: 'Valor',
+                            margin: 80
+                                }
+                            },
+                    series: [{
+                        color : '#c23d23',
+                        lineColor: '#303030',
+                        name: 'Eixo X',
+                        data: []
+                    }]
+                });
+                // --------------Chart 1 Ends - -----------------
+
+                chartHumidity = new Highcharts.Chart({
+                    chart:
+                        {
+                            renderTo: 'data-humidity',
+                            defaultSeriesType: 'area',
+                            width:600,
+                            height:240,
+                            events: {
+                                load: requestData
+                            }
+                        },
+                    title:
+                        {
+                            text: 'Eixo Y'
+                        },
+                    xAxis: {
+                        type: 'datetime',
+                        tickPixelInterval: 150,
+                        maxZoom: 20 * 1000
+                    },
+                    yAxis: {
+                        minPadding: 0.2,
+                        maxPadding: 0.2,
+                        title: {
+                            text: 'Valor',
+                            margin: 80
+                        }
+                    },
+                    series: [{
+                        lineColor: '#1d82b8',
+                        name: 'Eixo Y',
+                        data: []
+                    }]
+                });
+
+
+            });
+        </script>
+        </div>
+    </div>
+</div>
 </body>
 {% endblock content %}

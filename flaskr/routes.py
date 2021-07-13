@@ -1,16 +1,31 @@
+from datetime import datetime
 import os
 import io
 import smtplib
 import csv
+import json
+from time import time, sleep
 from email.message import EmailMessage
 from os.path import join, dirname, realpath
-import sqlite3
-from werkzeug.utils import secure_filename
 from pymodbus.exceptions import ConnectionException
-from flask import render_template, flash, url_for, redirect, request, Response
+from werkzeug.utils import secure_filename
+from flask import (
+    render_template,
+    flash,
+    url_for,
+    redirect,
+    request,
+    Response,
+    make_response,
+)
 from flask_login import login_user, logout_user, login_required, current_user
 from flaskr import app, db
-from src.serial_modules import configure_client, move_by_point, move_by_trajectory
+from src.serial_modules import configure_client
+from src.database.repository import (
+    SessionRepository,
+    PositionRepository,
+    UserRepository,
+)
 from .forms import (
     ConfigurePort,
     RegistrationForm,
@@ -18,7 +33,13 @@ from .forms import (
     ForgotForm,
     ControlTableForm,
 )
-from .models import Users
+from .models import Users, requires_roles
+
+
+login_time = 0
+logout_time = 0
+act_x = 0
+act_y = 0
 
 
 def allowed_file(filename):
@@ -49,6 +70,8 @@ def login():
         user = Users.query.filter_by(reg_number=form.reg_number.data).first()
         if user:
             login_user(user)
+            global login_time
+            login_time = datetime.now()
             next_page = request.args.get("next")
             return redirect(next_page) if next_page else redirect(url_for("home"))
         flash("E-mail ou senha incorretos.", "danger")
@@ -62,18 +85,23 @@ def home():
     """Rota - Principal"""
 
     user = current_user
-    user_id = user.id
+
+    repository = PositionRepository()
 
     configure_form = ConfigurePort()
     control_form = ControlTableForm()
 
+    global act_x
+    global act_y
+
     if configure_form.configure_submit.data and configure_form.validate_on_submit():
-        global client
         port = configure_form.port.data
         baudrate = int(configure_form.baudrate.data)
+        global client
         client = configure_client(port, baudrate)
 
     if control_form.control_submit.data and control_form.validate_on_submit():
+
         x_axis = control_form.x_axis.data
         y_axis = control_form.y_axis.data
 
@@ -82,9 +110,15 @@ def home():
         if y_axis == "":
             y_axis = 0
         if x_axis != 0:
-            x_axis = int(control_form.x_axis.data)
+            try:
+                x_axis = int(control_form.x_axis.data)
+            except ValueError:
+                flash("Por favor, digite valores inteiros no eixo X.", "error")
         if y_axis != 0:
-            y_axis = int(control_form.y_axis.data)
+            try:
+                y_axis = int(control_form.y_axis.data)
+            except ValueError:
+                flash("Por favor, digite valores inteiros no eixo Y.", "error")
 
         move_type = int(request.form["move_type"])
 
@@ -99,29 +133,103 @@ def home():
 
         if move_type == 0:
             try:
-                move_by_point(
-                    x_axis=x_axis, y_axis=y_axis, user_id=user_id, client=client
+                client.connect()
+                sleep(1.7)
+                client.write_register(512, x_axis, unit=1)
+                timeout = time() + 7
+                while True:
+                    x_response = client.read_holding_registers(512, 1, unit=1)
+                    act_x = x_response.registers[0]
+                    print("X: {}".format(act_x))
+                    if time() > timeout:
+                        print("Erro de Timeout")
+                        break
+                    if x_axis == act_x:
+                        print("Eixo X OK!")
+                        break
+
+                client.write_register(528, y_axis, unit=1)
+                timeout = time() + 7
+                while True:
+                    y_response = client.read_holding_registers(528, 1, unit=1)
+                    act_y = y_response.registers[0]
+                    print("Y: {}".format(act_y))
+                    if time() > timeout:
+                        print("Erro de timeout")
+                        break
+
+                repository.insert_position(
+                    x_axis=act_x,
+                    y_axis=act_x,
+                    date_time=datetime.now(),
+                    user_id=user.id,
                 )
+            except NameError:
+                flash("Por favor, configure a porta serial.", "error")
             except ConnectionException:
-                flash("Erro ao tentar conectar", "error")
+                flash("Erro ao tentar conectar-se.", "error")
 
         if move_type == 1:
             try:
-                move_by_trajectory(
-                    path=join(join(dirname(realpath(__file__)), "files"), filename),
-                    client=client,
-                    user_id=user_id,
-                )
+                with open(
+                    join(join(dirname(realpath(__file__)), "files"), filename), "r"
+                ) as file:
+                    for linha in file:
+                        pontos = linha.split()
+                        x_axis = int(pontos[0])
+                        y_axis = int(pontos[1])
+                        client.connect()
+                        sleep(1.7)
+                        client.write_register(512, x_axis, unit=1)
+                        timeout = time() + 7
+                        while True:
+                            x_response = client.read_holding_registers(512, 1, unit=1)
+                            act_x = x_response.registers[0]
+                            print("X: {}".format(act_x))
+                            if time() > timeout:
+                                print("Erro de Timeout")
+                                break
+                            if x_axis == act_x:
+                                print("Eixo X OK!")
+                                break
+
+                        client.write_register(528, y_axis, unit=1)
+                        timeout = time() + 7
+                        while True:
+                            y_response = client.read_holding_registers(528, 1, unit=1)
+                            act_y = y_response.registers[0]
+                            print("Y: {}".format(act_y))
+                            if time() > timeout:
+                                print("Erro de timeout")
+                                break
+                            if y_axis == act_y:
+                                print("Eixo Y OK!")
+                                break
+
+                        repository.insert_position(
+                            x_axis=act_x,
+                            y_axis=act_x,
+                            date_time=datetime.now(),
+                            user_id=user.id,
+                            trajectory=filename,
+                        )
+                    file.close()
             except Exception:
                 flash("Ocorreu algum erro", "error")
 
     return render_template(
-        "home.html", title="home", configure_form=configure_form, move_form=control_form
+        "home.html",
+        title="home",
+        configure_form=configure_form,
+        move_form=control_form,
+        act_x=act_x,
+        act_y=act_y,
     )
 
 
 @app.route("/register", methods=["GET", "POST"])
-# @login_required
+@login_required
+@requires_roles("1")
 def register():
     """Rota - Register"""
 
@@ -144,22 +252,13 @@ def register():
 
 
 @app.route("/position_log")
+@login_required
+@requires_roles("1")
 def position_log():
     """Rota - Histórico de posições"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT u.name, p.x_axis, p.y_axis, p.trajectory, p.date_time
-    FROM users AS u, positions AS p
-    WHERE u.id = p.user_id
-    """
-    )
-    positions = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = PositionRepository()
+    positions = repository.select_all()
 
     return render_template(
         "position_log.html",
@@ -169,23 +268,13 @@ def position_log():
 
 
 @app.route("/session_log")
+@login_required
+@requires_roles("1")
 def session_log():
     """Rota - Histórico de sessões"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT u.reg_number, u.name, s.login_time, ((JULIANDAY(s.logout_time) - JULIANDAY(s.login_time))*24*60) AS periodo
-    FROM users u, sessions s
-    WHERE u.id  =  s.user_id
-    ORDER BY s.login_time DESC
-    """
-    )
-    sessions = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = SessionRepository()
+    sessions = repository.select_all()
 
     return render_template(
         "session_log.html",
@@ -195,21 +284,13 @@ def session_log():
 
 
 @app.route("/registered_users")
+@login_required
+@requires_roles("1")
 def registered_users():
     """Rota - Usuários cadastrados"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT reg_number, name, email, special
-    FROM users
-    """
-    )
-    users = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = UserRepository()
+    users = repository.select_all()
 
     return render_template(
         "registered_users.html", title="Usuários cadastrados", users=users
@@ -251,41 +332,26 @@ def forgot():
 
 
 @app.route("/download/position_log")
+@login_required
+@requires_roles("1")
 def download_position():
     """Rota - Download da posição"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT u.name, p.x_axis, p.y_axis, p.trajectory, p.date_time
-    FROM users AS u, positions AS p
-    WHERE u.id = p.user_id
-    """
-    )
-    positions = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = PositionRepository()
+    positions = repository.select_all()
 
     output = io.StringIO()
     writer = csv.writer(output)
 
     line = ["Nome", "Eixo X", "Eixo Y", "Trajetoria", "Data e hora"]
     writer.writerow(line)
-    line = []
     for position in positions:
-        line = [
-            position[0]
-            + ","
-            + str(position[1])
-            + ","
-            + str(position[2])
-            + ","
-            + str(position[3])
-            + ","
-            + str(position[4])
-        ]
+        line = []
+        line.append(position[0])
+        line.append(position[1])
+        line.append(position[2])
+        line.append(position[3])
+        line.append(position[4])
         writer.writerow(line)
 
     output.seek(0)
@@ -300,40 +366,26 @@ def download_position():
 
 
 @app.route("/download/session_log")
+@login_required
+@requires_roles("1")
 def download_session():
     """Rota - Download da posição"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT u.reg_number, u.name, s.login_time, ((JULIANDAY(s.logout_time) - JULIANDAY(s.login_time))*24*60) AS periodo
-    FROM users u, sessions s
-    WHERE u.id  =  s.user_id
-    ORDER BY s.login_time DESC
-    """
-    )
-    sessions = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = SessionRepository()
+    sessions = repository.select_all()
 
     output = io.StringIO()
     writer = csv.writer(output)
 
-    line = ["Matrícula", "Nome", "Hora do login", "Duração"]
+    line = ["Matrícula", "Nome", "Hora do login", "Duração (min)"]
     writer.writerow(line)
-    line = []
+
     for session in sessions:
-        line = [
-            str(session[0])
-            + ","
-            + str(session[1])
-            + ","
-            + str(session[2])
-            + ","
-            + str(session[3])
-        ]
+        line = []
+        line.append(session[0])
+        line.append(session[1])
+        line.append(session[2])
+        line.append(session[3])
         writer.writerow(line)
 
     output.seek(0)
@@ -346,30 +398,25 @@ def download_session():
 
 
 @app.route("/download/users")
+@login_required
+@requires_roles("1")
 def download_users():
     """Rota - Download da posição"""
 
-    connection = sqlite3.connect("flaskr/storage.db")
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-    SELECT reg_number, name, email, special
-    FROM users
-    """
-    )
-    users = cursor.fetchall()
-
-    cursor.close()
-    connection.close()
+    repository = UserRepository()
+    users = repository.select_all()
 
     output = io.StringIO()
     writer = csv.writer(output)
 
     line = ["Matrícula", "Nome", "E-mail", "Especial"]
     writer.writerow(line)
-    line = []
     for user in users:
-        line = [str(user[0]) + "," + user[1] + "," + user[2] + "," + str(user[3])]
+        line = []
+        line.append(user[0])
+        line.append(user[1])
+        line.append(user[2])
+        line.append(user[3])
         writer.writerow(line)
 
     output.seek(0)
@@ -385,5 +432,36 @@ def download_users():
 def logout():
     """Rota - Logout"""
 
+    logout_time = datetime.now()
+    user = current_user
+    repository = SessionRepository()
+
+    repository.insert_session(
+        login_time=login_time, logout_time=logout_time, user_id=user.id
+    )
+
     logout_user()
+
     return redirect(url_for("login"))
+
+
+@app.route("/data", methods=["GET", "POST"])
+def data():
+    """Dados da mesa de coordenadas"""
+
+    global act_x
+    global act_y
+
+    data = [time() * 1000, act_x, act_y]
+
+    response = make_response(json.dumps(data))
+    response.content_type = "application/json"
+
+    return response
+
+
+@app.route("/help")
+def help():
+    """Rota - Ajuda"""
+
+    return render_template("help.html", title="Ajuda")

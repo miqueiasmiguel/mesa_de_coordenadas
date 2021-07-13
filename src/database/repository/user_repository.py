@@ -31,24 +31,11 @@ class UserRepository:
 
         return (reg_number, name, email, password, special)
 
-    def delete_user(self, reg_number):
-        """Deleta um usuário na tabela 'users'
-        :param reg_number: Matrícula do usuário
-        """
-        connection = sqlite3.connect("flaskr/storage.db")
-        cursor = connection.cursor()
-        cursor.execute(
-            """
-        DELETE FROM users WHERE reg_number = ?
-        """,
-            (reg_number,),
-        )
-        connection.commit()
-        connection.close()
+    def select_all(self) -> List[Tuple]:
+        """Consulta todos  os usuários na tabela 'usuário'
+           com os atributos: matrícula, nome, e-mail e
+           especial
 
-    def select_user(self, reg_number: int) -> List[Tuple]:
-        """Consulta um usuário na tabela 'usuário'
-        :param user_reg: Matrícula do usuário
         :return: Lista contendo tuplas com as informações
                  dos usuários
         """
@@ -56,9 +43,9 @@ class UserRepository:
         cursor = connection.cursor()
         cursor.execute(
             """
-        SELECT * FROM users WHERE reg_number = ?
-        """,
-            (reg_number,),
+        SELECT reg_number, name, email, special
+        FROM users
+        """
         )
         rows = cursor.fetchall()
 

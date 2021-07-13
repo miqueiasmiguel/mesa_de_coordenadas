@@ -65,7 +65,7 @@ class ConfigurePort(FlaskForm):
 
     port = SelectField("Porta:", choices=choices)
     baudrate = SelectField("Baud:", choices=[("9600", "9600"), ("19200", "19200")])
-    configure_submit = SubmitField("Conectar")
+    configure_submit = SubmitField("Configurar")
 
 
 class ControlTableForm(FlaskForm):

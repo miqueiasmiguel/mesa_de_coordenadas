@@ -1,6 +1,6 @@
 import sqlite3
 from datetime import datetime
-from typing import Tuple
+from typing import Tuple, List
 
 
 class SessionRepository:
@@ -31,17 +31,26 @@ class SessionRepository:
 
         return (id, login_time, logout_time, user_id)
 
-    def delete_session(self, id: int):
-        """Deleta uma sessão na tabela 'sessions'
-        :param id: id da sessão
+    def select_all(self) -> List[Tuple]:
+        """Consulta todas  as sessões na tabela 'sessions'
+           com os atributos: matrícula, nome, hora de login
+           e a duração da sessão em minutos, ordenadas pela
+           hora de login.
+
+        :return: Lista contendo tuplas com as informações
+                 das sessões
         """
         connection = sqlite3.connect("flaskr/storage.db")
         cursor = connection.cursor()
         cursor.execute(
             """
-        DELETE FROM sessions WHERE id = ?
-        """,
-            (id,),
+        SELECT u.reg_number, u.name, s.login_time, ((JULIANDAY(s.logout_time) - JULIANDAY(s.login_time))*24*60)
+        AS periodo
+        FROM users u, sessions s
+        WHERE u.id  =  s.user_id
+        ORDER BY s.login_time DESC
+        """
         )
-        connection.commit()
-        connection.close()
+        rows = cursor.fetchall()
+
+        return rows
