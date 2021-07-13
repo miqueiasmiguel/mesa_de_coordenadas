@@ -470,12 +470,9 @@ def download_users():
 def logout():
     """Rota - Logout"""
 
-    logout_time = datetime.now()
-    user = current_user
     repository = SessionRepository()
-
     repository.insert_session(
-        login_time=login_time, logout_time=logout_time, user_id=user.id
+        login_time=login_time, logout_time=datetime.now(), user_id=current_user.id
     )
 
     logout_user()
