@@ -5,7 +5,6 @@ Desenvolvedores: - Bruno
                  - Miquéias
 
 
-
 Configurações Iniciais:
 ====================================================================
 - Crie uma pasta chamada "Mesa de Coordenadas"
