@@ -32,10 +32,7 @@ def requires_roles(*roles):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.special not in roles:
-                # Redirect the user to an unauthorized notice!
-                return "You are not authorized to access this page"
+                return "Você não está autorizado a acessar esta página"
             return f(*args, **kwargs)
-
         return wrapped
-
     return wrapper

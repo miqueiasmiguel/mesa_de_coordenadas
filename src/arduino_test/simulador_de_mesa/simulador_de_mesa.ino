@@ -34,7 +34,7 @@ void loop() {
   regBank.set(40561,0);
   regBank.set(40577,0);
   regBank.set(40593,0);
-  
+
   while(1)
   {
     
@@ -73,7 +73,7 @@ void loop() {
    if(def_y<act_y)
    {
     for (act_y; act_y>=def_y; act_y--)
-     {
+     
       regBank.set(40593, act_y);
       digitalWrite(3,HIGH);
      }

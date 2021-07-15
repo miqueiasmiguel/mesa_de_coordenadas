@@ -176,6 +176,7 @@ def home():
                         pontos = linha.split()
                         x_axis = int(pontos[0])
                         y_axis = int(pontos[1])
+                        
                         response = control.move_by_point(
                             def_x=x_axis,
                             def_y=y_axis,
@@ -207,8 +208,8 @@ def home():
 
 
 @app.route("/register", methods=["GET", "POST"])
-# @login_required
-# @requires_roles(True)
+@login_required
+@requires_roles(True)
 def register():
     """Rota - Register"""
 
@@ -308,6 +309,7 @@ def download_position():
 
     repository = PositionRepository()
     positions = repository.select_all()
+
     csv_writer = CSVWriter()
     output = csv_writer.positions_csv(positions)
 
@@ -328,6 +330,7 @@ def download_session():
 
     repository = SessionRepository()
     sessions = repository.select_all()
+
     csv_writer = CSVWriter()
     output = csv_writer.sessions_csv(sessions)
 
@@ -346,6 +349,7 @@ def download_users():
 
     repository = UserRepository()
     users = repository.select_all()
+
     csv_writer = CSVWriter()
     output = csv_writer.users_csv(users)
 
