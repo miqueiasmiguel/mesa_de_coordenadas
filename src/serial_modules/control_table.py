@@ -1,5 +1,5 @@
 from time import time, sleep
-from pymodbus.client.sync import ModbusSerialClient as RTUClient
+from pymodbus.client.sync import ModbusSerialClient
 
 
 class ControlTable:
@@ -10,7 +10,12 @@ class ControlTable:
         self.act_y = 0
 
     def move_by_point(
-        self, def_x: int, def_y: int, x_speed: int, y_speed: int, client: RTUClient
+        self,
+        def_x: int,
+        def_y: int,
+        x_speed: int,
+        y_speed: int,
+        client: ModbusSerialClient,
     ):
         """Controla a mesa a partir da definição de ponto
 
