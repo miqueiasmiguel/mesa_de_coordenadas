@@ -6,7 +6,7 @@ Desenvolvedores: - Bruno
 
 
 Configurações Iniciais:
-====================================================================
+====================================================================================================
 - Crie uma pasta chamada "Mesa de Coordenadas"
 
 - Instale o módulo para criação de ambiente virtual utilizando
@@ -24,15 +24,20 @@ Configurações Iniciais:
 
 - Instale o pre-commit com 'pre-commit install' (apenas se pretende alterar o repositório)
 
-- Para criar um banco de dados, rode o script 'Mesa de Coordenadas/database/create_db.py'
-  alterando caminho do diretório que ele será criado.
+- Para criar um banco de dados, rode o script 'Mesa de Coordenadas/database/config/create_db.py'
 
 - Rode o servidor executando o arquivo 'run.py'
-====================================================================
+
+- Como não há nenhum usuário cadastrado, você não terá acesso ao sistema. Vá para o arquivo
+  'flaskr/routes.py'. Na linha 210 comente os decoradores '@login_required' e @required_roles.
+  Isso possibilitará a criação de um primeiro usuário na url 'localhost:5000/register'. Em
+  seguida, retire o comentário para que esta página só seja acessível por meio de login e
+  que seja um usuário especial.
+====================================================================================================
 
 
 Algumas Informações:
-====================================================================
+====================================================================================================
 - Os arquivos '.flake8', '.pre-commit-config.yaml' e ''.pylintrc'
   são arquivos de configuração de alguns módulos instalados.
 
@@ -42,4 +47,4 @@ Algumas Informações:
 
 - A pasta serial_modules refere-se aos aquivos relacionados à comu-
   nicação serial.
-====================================================================
+====================================================================================================

@@ -176,7 +176,6 @@ def home():
                         pontos = linha.split()
                         x_axis = int(pontos[0])
                         y_axis = int(pontos[1])
-                        
                         response = control.move_by_point(
                             def_x=x_axis,
                             def_y=y_axis,
