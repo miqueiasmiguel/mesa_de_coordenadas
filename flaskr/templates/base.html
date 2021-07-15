@@ -59,7 +59,7 @@
             <div class="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
                 <ul class="navbar-nav ml-auto flex-nowrap">
                     <li class="nav-item">
-                        <a href={{ url_for("help") }} class="nav-link">
+                        <a href={{ url_for("help_page") }} class="nav-link">
                             <img id="help" src={{ url_for("static", filename="help_icon.png") }} width="25" height="25" alt="">
                         </a>
                     </li>
@@ -75,7 +75,7 @@
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                 <a class="dropdown-item" href={{ url_for("home")}}>Início</a>
                                 {% if current_user.special == True %}
-                                    <a class="dropdown-item" href={{ url_for("register")}}>Cadstrar</a>
+                                    <a class="dropdown-item" href={{ url_for("register")}}>Cadastrar</a>
                                 {% endif %}
                                 {% if current_user.special == True %}
                                     <a class="dropdown-item" href={{ url_for("position_log") }}>Histórico de Posições</a>

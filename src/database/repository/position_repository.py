@@ -1,5 +1,5 @@
 import sqlite3
-import datetime
+from datetime import datetime
 from typing import Tuple, List
 
 
@@ -12,6 +12,8 @@ class PositionRepository:
         y_axis: int,
         date_time: datetime,
         user_id: int,
+        x_speed: int,
+        y_speed: int,
         trajectory=None,
     ) -> Tuple:
         """Insere uma nova posição na tabela 'positions'
@@ -27,10 +29,10 @@ class PositionRepository:
         cursor = connection.cursor()
         cursor.execute(
             """
-        INSERT INTO positions (x_axis, y_axis, date_time, trajectory, user_id)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO positions (x_axis, y_axis, date_time, trajectory, x_speed, y_speed, user_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
         """,
-            (x_axis, y_axis, date_time, trajectory, user_id),
+            (x_axis, y_axis, date_time, trajectory, x_speed, y_speed, user_id),
         )
         connection.commit()
         id = cursor.lastrowid
@@ -51,7 +53,7 @@ class PositionRepository:
         cursor = connection.cursor()
         cursor.execute(
             """
-        SELECT u.name, p.x_axis, p.y_axis, p.trajectory, p.date_time
+        SELECT u.name, p.x_axis, p.y_axis, p.trajectory, p.x_speed, p.y_speed, p.date_time
         FROM users AS u, positions AS p
         WHERE u.id = p.user_id
         ORDER BY p.date_time DESC

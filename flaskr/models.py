@@ -23,24 +23,6 @@ class Users(db.Model, UserMixin):
         return f"User('{self.name}', '{self.reg_number}', '{self.special}')"
 
 
-class Positions(db.Model):
-    """Entidade - Positions"""
-
-    __table__ = db.Model.metadata.tables["positions"]
-
-    def __repr__(self):
-        return f"Position('{self.user_id}', '{self.x_axis}', '{self.y_axis}', '{self.date_time}')"
-
-
-class Sessions(db.Model):
-    """Entidade - Sessions"""
-
-    __table__ = db.Model.metadata.tables["sessions"]
-
-    def __repr__(self):
-        return f"Session('{self.user_id}', '{self.date}', '{self.login_time}', '{self.logout_time}')"
-
-
 def requires_roles(*roles):
     """Função para definir que é necessário ser um
     usuário especial para acessar a página
@@ -50,10 +32,7 @@ def requires_roles(*roles):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if current_user.special not in roles:
-                # Redirect the user to an unauthorized notice!
-                return "You are not authorized to access this page"
+                return "Você não está autorizado a acessar esta página"
             return f(*args, **kwargs)
-
         return wrapped
-
     return wrapper

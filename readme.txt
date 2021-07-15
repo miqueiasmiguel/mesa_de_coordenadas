@@ -26,7 +26,7 @@ Configurações Iniciais:
 
 - Para criar um banco de dados, rode o script 'Mesa de Coordenadas/database/create_db.py'
   alterando caminho do diretório que ele será criado.
-  
+
 - Rode o servidor executando o arquivo 'run.py'
 ====================================================================
 
