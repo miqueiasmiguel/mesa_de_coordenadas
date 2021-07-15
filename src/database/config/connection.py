@@ -1,7 +1,7 @@
 import sqlite3
+from sqlite3 import Error
 from sqlite3.dbapi2 import Connection
 from typing import Type
-from sqlite3 import Error
 
 
 def create_connection(db_file: str) -> Type[Connection]:

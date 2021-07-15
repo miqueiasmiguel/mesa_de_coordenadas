@@ -8,7 +8,8 @@ class UserRepository:
     def insert_user(
         self, reg_number: int, name: str, email: str, password: str, special: bool
     ) -> Tuple:
-        """Insere um novo usuário na tabela 'users'
+        """Insere um novo usuário na tabela 'usuários'
+
         :param reg_number: Matrícula do usuário
         :param name: Nome do usuário
         :param email: E-mail do usuário

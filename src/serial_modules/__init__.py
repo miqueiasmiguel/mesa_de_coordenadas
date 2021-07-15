@@ -1,1 +1,1 @@
-from .client_config import configure_client
+from .control_table import ControlTable
