@@ -59,12 +59,20 @@ class ForgotForm(FlaskForm):
 class ConfigurePort(FlaskForm):
     """Formulário para configurar a porta serial"""
 
+    # Representa as portas seriais disponíveis
     choices = []
     for number in range(1, 11):
         choices.append(("COM{}".format(number), "COM{}".format(number)))
 
+    # Representa os baud rate disponíveis
+    b_choices = [
+        ("9600", "9600"),
+        ("19200", "19200"),
+        ("115200", "115200"),
+    ]
+
     port = SelectField("Porta:", choices=choices)
-    baudrate = SelectField("Baud:", choices=[("9600", "9600"), ("19200", "19200")])
+    baudrate = SelectField("Baud:", choices=b_choices)
     configure_submit = SubmitField("Configurar")
 
 
